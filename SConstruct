@@ -1,11 +1,11 @@
 ## INFO ########################################################################
 ##                                                                            ##
-##                                    pypp                                    ##
-##                                    ====                                    ##
+##                                 ChemicalX                                  ##
+##                                 =========                                  ##
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.003 (20150525)                        ##
+##                       Version: 0.0.1.016 (20150526)                        ##
 ##                              File: SConstruct                              ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
@@ -35,24 +35,31 @@ from sys     import argv
 from os.path import join
 
 # Config variables
-gcc        = 'gcc'
-clang      = 'clang'
-input_dir  = 'src'
-output_dir = 'build'
-target     = 'cx'
-source     = ['main.c']
+debug       = False
+gcc         = 'gcc'
+clang       = 'clang'
+input_dir   = 'ChemicalX'
+build_dir   = 'build'
+output_dir  = 'dist'
+target      = 'cx'
+source      = [join('src', 'main.c'),
+               join('src', 'cassowary', 'abstract_variable.c')]
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# Output
+TARGET = join(output_dir, target)
 
 # C Compiler
 CC = clang
 
 # C Compiler Flags
 CCFLAGS = ['v',
-           'g',
            'O3',
            'Wall',
            'Wextra',
            'pedantic',
-           'std=c11',]
+           'std=c11',
+           'g' if debug else '']
 
 # GCC Specific Compiler Flags
 GCCFLAGS = ['fdiagnostics-color=always']
@@ -65,7 +72,7 @@ CLANGFLAGS = ['fcolor-diagnostics',
 CCFLAGS.extend(GCCFLAGS if CC == gcc else CLANGFLAGS if CC == clang else [])
 
 # C Pre-Processor Path (Include)
-CPPPATH = ['include']
+CPPPATH = [join(build_dir, 'include')]
 
 # Library paths
 LIBPATH = ['/usr/lib',
@@ -76,20 +83,20 @@ LIBS = []
 
 # Create environment
 environment = Environment(CC=CC,
-                          CCFLAGS=['-' + flag for flag in CCFLAGS],
+                          CCFLAGS=['-' + flag for flag in CCFLAGS if flag],
                           CPPPATH=CPPPATH,
                           LIBPATH=LIBPATH,
                           LIBS=LIBS)
 
 # Specify output directory
-environment.VariantDir(variant_dir=output_dir,
+environment.VariantDir(variant_dir=build_dir,
                        src_dir=input_dir)
 
-compile_src = environment.Program(target=target,
-                                  source=[join(output_dir, file) for file in source])
+compile_src = environment.Program(target=TARGET,
+                                  source=[join(build_dir, file) for file in source])
 
 # Run "administrative" cutils-tools first
-cutils_hook = environment.Command(target='build',
+cutils_hook = environment.Command(target='cutils',
                                   source=None,
                                   action='python3 build.py')
 environment.Depends(compile_src, cutils_hook)
@@ -97,8 +104,8 @@ environment.Depends(compile_src, cutils_hook)
 # If `run` is specified as argument
 execute_app = environment.Command(target='run',
                                   source=None,
-                                  action='./' + target)
+                                  action='./' + TARGET)
 environment.Depends(execute_app, compile_src)
 
 # If there is no argument specified, only compile target
-environment.Default(target)
+environment.Default(TARGET)

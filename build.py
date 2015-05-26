@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 ## INFO ########################################################################
 ##                                                                            ##
-##                                    pypp                                    ##
-##                                    ====                                    ##
+##                                 ChemicalX                                  ##
+##                                 =========                                  ##
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.003 (20150525)                        ##
+##                       Version: 0.0.1.016 (20150526)                        ##
 ##                               File: build.py                               ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
@@ -46,7 +46,8 @@ try:
 
     exclude = deepcopy(cutils.ccom.EXCLUDE)
     exclude['folders'].append('build')
-    exclude['folders'].append('ovr_sdk')
+    exclude['folders'].append('dist')
+    exclude['folders'].append('cassowary_implementations')
 
     ccom_include = deepcopy(cutils.ccom.INCLUDE)
     ccom_include['extensions'].extend(web_dev)

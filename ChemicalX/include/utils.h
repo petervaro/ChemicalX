@@ -1,12 +1,12 @@
 /* INFO ************************************************************************
 **                                                                            **
-**                                    pypp                                    **
-**                                    ====                                    **
+**                                 ChemicalX                                  **
+**                                 =========                                  **
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.004 (20150525)                        **
-**                              File: src/main.c                              **
+**                       Version: 0.0.1.025 (20150526)                        **
+**                      File: ChemicalX/include/utils.h                       **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -27,15 +27,12 @@
 **                                                                            **
 ************************************************************************ INFO */
 
-#include <stdlib.h> /*
-    const : EXIT_SUCCESS
-            EXIT_FAILURE
-*/
+/* Header guard */
+#ifndef __CHEMICAL_X_UTILS_H_4967258996282923__
+#define __CHEMICAL_X_UTILS_H_4967258996282923__
 
-/* namespace => cx_Draw() */
+/*----------------------------------------------------------------------------*/
+#define cx_STRINGIFY_BOOL(V)     V ? "true" : "false"
+#define cx_FORMAT_STRUCT(S, M)   "<struct " S "{" M "} at %p>\n"
 
-int
-main(void)
-{
-    return EXIT_SUCCESS;
-}
+#endif /* __CHEMICAL_X_UTILS_H_4967258996282923__ */
