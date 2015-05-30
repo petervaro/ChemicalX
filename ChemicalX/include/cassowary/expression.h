@@ -5,8 +5,8 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
-**           File: ChemicalX/include/cassowary/abstract_variable.h            **
+**                       Version: 0.0.1.071 (20150530)                        **
+**               File: ChemicalX/include/cassowary/expression.h               **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -28,47 +28,27 @@
 ************************************************************************ INFO */
 
 /* Header guard */
-#ifndef __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-#define __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
+#ifndef __CHEMICAL_X_CASSOWARY_EXPRESSION_H_5751759941745008__
+#define __CHEMICAL_X_CASSOWARY_EXPRESSION_H_5751759941745008__
 
-/* Include standard headers */
-#include <stddef.h> /*
-    type  : size_t
-*/
-#include <stdbool.h> /*
-    type  : bool
+/* Include ChemicalX headers */
+#include "containers/map.h" /*
+    type  : cx_HashMap
 */
 
 /*----------------------------------------------------------------------------*/
-/* Properties of cass_AbstractVariable */
-#define cass_AbstractVariable_HEAD()    \
-    char       *name;                   \
-    size_t      name_length;            \
-    bool        is_dummy;               \
-    bool        is_external;            \
-    bool        is_pivotable;           \
-    bool        is_restricted;
+/* Properties of cass_Expression */
+#define cass_Expression_HEAD()  \
+    float       constant;       \
+    cx_HashMap *terms;
 
 
 
 /*----------------------------------------------------------------------------*/
 typedef struct
 {
-    cass_AbstractVariable_HEAD()
-} cass_AbstractVariable;
+    cass_Expression_HEAD()
+} cass_Expression;
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_del(cass_AbstractVariable **self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_print(cass_AbstractVariable *const *const self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_println(cass_AbstractVariable *const *const self);
 
-#endif /* __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__ */
+#endif /* __CHEMICAL_X_CASSOWARY_EXPRESSION_H_5751759941745008__ */

@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.044 (20150526)                        **
+**                       Version: 0.0.1.122 (20150530)                        **
 **             File: ChemicalX/src/cassowary/abstract_variable.c              **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -50,7 +50,7 @@
     func  : strncpy
 */
 
-/* Include user defined headers */
+/* Include ChemicalX headers */
 #include "cassowary/abstract_variable.h" /*
     type  : cass_AbstractVariable
 */
@@ -63,33 +63,39 @@
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cass_AbstractVariable_init(cass_AbstractVariable **self,
-                           const char             *name,
-                           const size_t            name_length)
+cass_AbstractVariable_new(cass_AbstractVariable **self,
+                          const char             *name,
+                          const size_t            name_length)
 {
+    /* TODO: if name is NULL?
+             if name_length is 0? (=> name_length - 1) */
+
     cass_AbstractVariable *abs_var;
     if (!(abs_var = malloc(sizeof(cass_AbstractVariable))))
     {
-        fprintf(stderr, "cass_AbstractVariable_init(): Cannot allocate "
-                        "space for cass_AbstractVariable\n"
-                        "(Hint: the name was: '%s')\n", name);
+        fprintf(stderr, "cass_AbstractVariable_new(): Cannot allocate "
+                        "memory for cass_AbstractVariable\n"
+                        "(The name of the variable was: \"%s\")\n"
+                        "(Hint: `malloc` (from <stdlib.h>) failed)\n", name);
         goto Self_Alloc_Error;
     }
 
     if (!(abs_var->name = malloc(name_length)))
     {
-        fprintf(stderr, "cass_AbstractVariable_init(): Cannot allocate "
-                        "space for cass_AbstractVariable->name\n"
-                        "(Hint: the name was: '%s')\n", name);
+        fprintf(stderr, "cass_AbstractVariable_new(): Cannot allocate "
+                        "memory for cass_AbstractVariable->name\n"
+                        "(The name of the variable was: \"%s\")\n"
+                        "(Hint: `malloc` (from <stdlib.h>) failed)\n", name);
         goto Name_Alloc_Error;
     }
 
     /* Store `name` property */
     if (!strncpy(abs_var->name, name, name_length - 1))
     {
-        fprintf(stderr, "cass_AbstractVariable_init(): Cannot copy "
-                        "name to cass_AbstractVariable->name\n"
-                        "(Hint: the name was: '%s')\n", name);
+        fprintf(stderr, "cass_AbstractVariable_new(): Cannot copy "
+                        "name value to cass_AbstractVariable->name\n"
+                        "(The name of the variable was: \"%s\")\n"
+                        "(Hint: `strncpy` (from <string.h>) failed)\n", name);
         goto Name_Store_Error;
     }
 
@@ -134,28 +140,41 @@ cass_AbstractVariable_del(cass_AbstractVariable **self)
 
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+#define cass_AbstractVariable_PRINT(SELF,                                      \
+                                    LINE_END)                                  \
+    /* If there was an error, or the instance has been deleted */              \
+    if (!SELF)                                                                 \
+        printf(cx_FORMAT_STRUCT_NULL("cass_AbstractVariable", LINE_END));      \
+    /* Print formatted representation of this instance */                      \
+    else                                                                       \
+        printf(cx_FORMAT_STRUCT("cass_AbstractVariable",                       \
+                                ".name=\"%s\", "                               \
+                                ".name_length=%zu, "                           \
+                                ".is_dummy=%s, "                               \
+                                ".is_external=%s, "                            \
+                                ".is_pivotable=%s, "                           \
+                                ".is_restricted=%s",                           \
+                                LINE_END),                                     \
+               SELF->name,                                                     \
+               SELF->name_length,                                              \
+               cx_STRINGIFY_BOOL(SELF->is_dummy),                              \
+               cx_STRINGIFY_BOOL(SELF->is_external),                           \
+               cx_STRINGIFY_BOOL(SELF->is_pivotable),                          \
+               cx_STRINGIFY_BOOL(SELF->is_restricted),                         \
+               SELF);
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_print(cass_AbstractVariable *self)
+cass_AbstractVariable_print(cass_AbstractVariable *const *const self)
 {
-    /* If there was an error, or the instance has been deleted */
-    if (!self)
-    {
-        printf(cx_FORMAT_STRUCT("cass_AbstractVariable", ""), self);
-        return;
-    }
-    /* Print formatted representation of this instance */
-    printf(cx_FORMAT_STRUCT("cass_AbstractVariable",
-                            ".name=\"%s\", "
-                            ".name_length=%zu, "
-                            ".is_dummy=%s, "
-                            ".is_external=%s, "
-                            ".is_pivotable=%s, "
-                            ".is_restricted=%s"),
-           self->name,
-           self->name_length,
-           cx_STRINGIFY_BOOL(self->is_dummy),
-           cx_STRINGIFY_BOOL(self->is_external),
-           cx_STRINGIFY_BOOL(self->is_pivotable),
-           cx_STRINGIFY_BOOL(self->is_restricted),
-           self);
+    cass_AbstractVariable_PRINT((*self), "")
+}
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+void
+cass_AbstractVariable_println(cass_AbstractVariable *const *const self)
+{
+    cass_AbstractVariable_PRINT((*self), "\n")
 }

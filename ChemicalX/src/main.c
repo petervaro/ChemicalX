@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.032 (20150526)                        **
+**                       Version: 0.0.1.123 (20150530)                        **
 **                         File: ChemicalX/src/main.c                         **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -27,20 +27,36 @@
 **                                                                            **
 ************************************************************************ INFO */
 
+/* Include standard headers */
 #include <stdlib.h> /*
     const : EXIT_SUCCESS
             EXIT_FAILURE
 */
 
-/* namespace => cx_Draw() */
-
+/* Include ChemicalX headers */
 #include "cassowary/abstract_variable.h" /*
     type  : cass_AbstractVariable
-    func  : cass_AbstractVariable_init
+    func  : cass_AbstractVariable_new
             cass_AbstractVariable_del
-            cass_AbstractVariable_print
+            cass_AbstractVariable_println
 */
 
+/* FOR TESTING !!! */
+#include "utils.h" /*
+    func  : cx_Bool_print
+            cx_Float_print
+            cx_Char_print
+            cx_CharPtr_print
+*/
+#include "containers/list_template.h" /*
+    macro : cx_List_TEMPLATE
+*/
+
+cx_List_TEMPLATE(BoolList    , bool      , cx_Bool_print   )
+cx_List_TEMPLATE(FloatList   , float     , cx_Float_print  )
+cx_List_TEMPLATE(CharList    , char      , cx_Char_print   )
+cx_List_TEMPLATE(CharPtrList , char *    , cx_CharPtr_print)
+cx_List_TEMPLATE(CharListList, CharList *, CharList_print  )
 
 
 /*----------------------------------------------------------------------------*/
@@ -48,11 +64,42 @@ int
 main(void)
 {
     cass_AbstractVariable *var;
-    if (!cass_AbstractVariable_init(&var, "hello", sizeof "hello"))
+    if (!cass_AbstractVariable_new(&var, "hello", sizeof "hello"))
         return EXIT_FAILURE;
-    cass_AbstractVariable_print(var);
+    cass_AbstractVariable_println(&var);
     cass_AbstractVariable_del(&var);
-    cass_AbstractVariable_print(var);
+    cass_AbstractVariable_println(&var);
+
+    BoolList *b;
+    if (!BoolList_from_data(&b, 4, (bool[]){true, false, false, true}))
+        return EXIT_FAILURE;
+    BoolList_println(&b);
+    BoolList_del(&b);
+    BoolList_println(&b);
+
+    FloatList *f;
+    if (!FloatList_from_data(&f, 6, (float[]){1.2f, 2.3f, 3.4f, 4.5f, 5.6f, 6.7f}))
+        return EXIT_FAILURE;
+    FloatList_println(&f);
+    FloatList_del(&f);
+
+    CharList *c;
+    if (!CharList_from_data(&c, 12, "hello world"))
+        return EXIT_FAILURE;
+    CharList_println(&c);
+    CharList_del(&c);
+
+    CharPtrList *s;
+    if (!CharPtrList_from_data(&s, 5, (char*[]){"hello", "world", "how", "are", "you"}))
+        return EXIT_FAILURE;
+    CharPtrList_println(&s);
+    CharPtrList_del(&s);
+
+    CharListList *l;
+    if (!CharListList_from_data(&l, 3, (CharList*[]){c, c, c}))
+        return EXIT_FAILURE;
+    CharListList_println(&l);
+    CharListList_del(&l);
 
     return EXIT_SUCCESS;
 }

@@ -5,8 +5,8 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
-**           File: ChemicalX/include/cassowary/abstract_variable.h            **
+**                       Version: 0.0.1.126 (20150530)                        **
+**                 File: ChemicalX/include/containers/list.h                  **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -28,8 +28,8 @@
 ************************************************************************ INFO */
 
 /* Header guard */
-#ifndef __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-#define __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
+#ifndef __CHEMICAL_X_CONTAINERS_LIST_H_944183585536577__
+#define __CHEMICAL_X_CONTAINERS_LIST_H_944183585536577__
 
 /* Include standard headers */
 #include <stddef.h> /*
@@ -40,35 +40,43 @@
 */
 
 /*----------------------------------------------------------------------------*/
-/* Properties of cass_AbstractVariable */
-#define cass_AbstractVariable_HEAD()    \
-    char       *name;                   \
-    size_t      name_length;            \
-    bool        is_dummy;               \
-    bool        is_external;            \
-    bool        is_pivotable;           \
-    bool        is_restricted;
+typedef struct cx_list_node
+{
+    struct cx_list_node *next;    /* Pointer to next node */
+    char                 data[];  /* Internally stored data */
+} cx_ListNode;
 
 
 
 /*----------------------------------------------------------------------------*/
 typedef struct
 {
-    cass_AbstractVariable_HEAD()
-} cass_AbstractVariable;
+    size_t       data_size;  /* Size of the data in each node */
+    size_t       length;     /* Number of nodes in the list */
+    cx_ListNode *head;       /* Pointer to first node */
+    cx_ListNode *tail;       /* Pointer to last node */
+} cx_List;
+
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length);
+cx_List_new(cx_List **self,
+            size_t    item_size);
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+bool
+cx_List_from_data(cx_List **self,
+                  size_t    item_size,
+                  size_t    item_count,
+                  void     *items);
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_del(cass_AbstractVariable **self);
+cx_List_del(cx_List **self);
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_print(cass_AbstractVariable *const *const self);
+cx_List_print(cx_List *const *const self,
+              void                (*data_printer)());
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_println(cass_AbstractVariable *const *const self);
+cx_List_println(cx_List *const *const self,
+                void                (*data_printer)());
 
-#endif /* __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__ */
+#endif /* __CHEMICAL_X_CONTAINERS_LIST_H_944183585536577__ */

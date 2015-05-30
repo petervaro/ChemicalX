@@ -5,8 +5,8 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
-**           File: ChemicalX/include/cassowary/abstract_variable.h            **
+**                       Version: 0.0.1.071 (20150530)                        **
+**                 File: ChemicalX/src/cassowary/expression.c                 **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -27,48 +27,85 @@
 **                                                                            **
 ************************************************************************ INFO */
 
-/* Header guard */
-#ifndef __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-#define __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-
 /* Include standard headers */
-#include <stddef.h> /*
-    type  : size_t
+#include <stdlib.h> /*
+    func  : malloc
+            free
 */
 #include <stdbool.h> /*
     type  : bool
+    const : true
+            false
 */
 
-/*----------------------------------------------------------------------------*/
-/* Properties of cass_AbstractVariable */
-#define cass_AbstractVariable_HEAD()    \
-    char       *name;                   \
-    size_t      name_length;            \
-    bool        is_dummy;               \
-    bool        is_external;            \
-    bool        is_pivotable;           \
-    bool        is_restricted;
+/* Include ChemicalX headers */
+#include "containers/hash_map.h" /*
+    type  : cx_HashMap
+    func  : cx_HashMap_new
+            cx_HashMap_del
+*/
+#include "cassowary/expression.h" /*
+    type  : cass_Expression
+*/
 
 
 
-/*----------------------------------------------------------------------------*/
-typedef struct
-{
-    cass_AbstractVariable_HEAD()
-} cass_AbstractVariable;
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_del(cass_AbstractVariable **self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_print(cass_AbstractVariable *const *const self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_println(cass_AbstractVariable *const *const self);
+cass_Expression_new(cass_Expression **self)
+{
+    cass_Expression *expr;
+    if (!(expr = malloc(sizeof(cass_Expression))))
+    {
+        fprintf(stderr, "cass_Expression_new(): Cannot allocate "
+                        "memory for cass_Expression\n"
+                        "(The name of the variable was: \"%s\")\n"
+                        "(Hint: `malloc` (from <stdlib.h>) failed)\n", name);
+        goto Self_Alloc_Error;
+    }
 
-#endif /* __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__ */
+    if (!cx_HashMap_new(&expr->terms))
+    {
+        fprintf(stderr, "cass_Expression_new(): Cannot initialize "
+                        "cx_HashMap for cass_Expression->terms\n"
+                        "(The name of the variable was: \"%s\")\n"
+                        "(Hint: `cx_HashMap_new` "
+                        "(from \"containers/hash_map.h\") failed)\n", name);
+        goto Terms_Init_Error;
+    }
+
+    /* If everything went fine */
+    *self = expr;
+    return true;
+
+    /* If there was an error */
+    Terms_Init_Error:
+        free(expr);
+    Self_Alloc_Error:
+        *self = NULL;
+        return false;
+}
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+void
+cass_Expression_del(cass_Expression **self)
+{
+    /* If there was an error, or the instance has been deleted */
+    if (!*self)
+        return;
+    /* Delete `terms` member */
+    cx_HashMap_del(&(*self)->terms);
+    /* Free instance itself */
+    free(*self);
+    /* Set pointer */
+    *self = NULL;
+}
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+void
+cass_Expression_print(cass_Expression *self)
+{
+
+}

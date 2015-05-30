@@ -6,7 +6,7 @@
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.016 (20150526)                        ##
+##                       Version: 0.0.1.071 (20150530)                        ##
 ##                               File: build.py                               ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
@@ -29,7 +29,8 @@
 ######################################################################## INFO ##
 
 # Import python modules
-from copy import deepcopy
+from os.path import join
+from copy    import deepcopy
 
 # Module level constants
 CURRENT_DIR = '.'
@@ -47,6 +48,7 @@ try:
     exclude = deepcopy(cutils.ccom.EXCLUDE)
     exclude['folders'].append('build')
     exclude['folders'].append('dist')
+    exclude['folders'].append(join('ChemicalX', 'external'))
     exclude['folders'].append('cassowary_implementations')
 
     ccom_include = deepcopy(cutils.ccom.INCLUDE)

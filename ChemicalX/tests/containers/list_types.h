@@ -5,8 +5,8 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
-**           File: ChemicalX/include/cassowary/abstract_variable.h            **
+**                       Version: 0.0.1.126 (20150530)                        **
+**               File: ChemicalX/tests/containers/list_types.h                **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -27,48 +27,19 @@
 **                                                                            **
 ************************************************************************ INFO */
 
-/* Header guard */
-#ifndef __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-#define __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
+#ifndef __CHEMICAL_X_TESTS_CONTAINERS_LIST_TYPES_H_965266818368777__
+#define __CHEMICAL_X_TESTS_CONTAINERS_LIST_TYPES_H_965266818368777__
 
-/* Include standard headers */
-#include <stddef.h> /*
-    type  : size_t
-*/
-#include <stdbool.h> /*
-    type  : bool
+/* Include ChemicalX headers */
+#include "containers/list_template.h" /*
+    macro : cx_List_TEMPLATE_H
 */
 
-/*----------------------------------------------------------------------------*/
-/* Properties of cass_AbstractVariable */
-#define cass_AbstractVariable_HEAD()    \
-    char       *name;                   \
-    size_t      name_length;            \
-    bool        is_dummy;               \
-    bool        is_external;            \
-    bool        is_pivotable;           \
-    bool        is_restricted;
+cx_List_TEMPLATE_H(IntList            , int              )
+cx_List_TEMPLATE_H(FloatList          , float            )
+cx_List_TEMPLATE_H(CharList           , char             )
+cx_List_TEMPLATE_H(CharPtrList        , char *           )
+cx_List_TEMPLATE_H(CharPtrListList    , CharPtrList *    )
+cx_List_TEMPLATE_H(CharPtrListListList, CharPtrListList *)
 
-
-
-/*----------------------------------------------------------------------------*/
-typedef struct
-{
-    cass_AbstractVariable_HEAD()
-} cass_AbstractVariable;
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_del(cass_AbstractVariable **self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_print(cass_AbstractVariable *const *const self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_println(cass_AbstractVariable *const *const self);
-
-#endif /* __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__ */
+#endif /* __CHEMICAL_X_TESTS_CONTAINERS_LIST_TYPES_H_965266818368777__ */

@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.044 (20150526)                        ##
+##                       Version: 0.0.2.140 (20150530)                        ##
 ##                                 File: TODO                                 ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
@@ -26,3 +26,15 @@
 ##        called 'LICENSE'. If not, see <http://www.gnu.org/licenses>.        ##
 ##                                                                            ##
 ######################################################################## INFO ##
+
+#----------------------------- 1 POSTS IN 1 FILES -----------------------------#
+TODO:
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+  # 1
+  - file: ChemicalX/src/cassowary/abstract_variable.c
+    line: 70
+    note: |
+          if name is NULL?
+          if name_length is 0? (=> name_length - 1) 
+
+

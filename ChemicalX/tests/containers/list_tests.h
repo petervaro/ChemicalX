@@ -5,8 +5,8 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
-**           File: ChemicalX/include/cassowary/abstract_variable.h            **
+**                       Version: 0.0.2.132 (20150530)                        **
+**               File: ChemicalX/tests/containers/list_tests.h                **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -27,48 +27,18 @@
 **                                                                            **
 ************************************************************************ INFO */
 
-/* Header guard */
-#ifndef __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-#define __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
-
-/* Include standard headers */
-#include <stddef.h> /*
-    type  : size_t
-*/
-#include <stdbool.h> /*
-    type  : bool
-*/
+/* Header guards */
+#ifndef __CHEMICAL_X_TESTS_CONTAINERS_LIST_TESTS_H_8138427977812015__
+#define __CHEMICAL_X_TESTS_CONTAINERS_LIST_TESTS_H_8138427977812015__
 
 /*----------------------------------------------------------------------------*/
-/* Properties of cass_AbstractVariable */
-#define cass_AbstractVariable_HEAD()    \
-    char       *name;                   \
-    size_t      name_length;            \
-    bool        is_dummy;               \
-    bool        is_external;            \
-    bool        is_pivotable;           \
-    bool        is_restricted;
-
-
-
+void
+list_test_case_001(void);
 /*----------------------------------------------------------------------------*/
-typedef struct
-{
-    cass_AbstractVariable_HEAD()
-} cass_AbstractVariable;
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_del(cass_AbstractVariable **self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+list_test_case_002(void);
+/*----------------------------------------------------------------------------*/
 void
-cass_AbstractVariable_print(cass_AbstractVariable *const *const self);
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void
-cass_AbstractVariable_println(cass_AbstractVariable *const *const self);
+list_test_case_003(void);
 
-#endif /* __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__ */
+#endif /* __CHEMICAL_X_TESTS_CONTAINERS_LIST_TESTS_H_8138427977812015__ */

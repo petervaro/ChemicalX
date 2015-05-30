@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.016 (20150526)                        ##
+##                       Version: 0.0.1.129 (20150530)                        ##
 ##                              File: SConstruct                              ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
@@ -28,29 +28,117 @@
 ######################################################################## INFO ##
 
 # Indicate the beginning of building
-print '{:#^80}'.format(' SCONS BUILD ')
+print '\n{:#^80}\n'.format(' SCONS BUILD ')
 
 # Import python modules
-from sys     import argv
 from os.path import join
 
-# Config variables
-debug       = False
-gcc         = 'gcc'
-clang       = 'clang'
-input_dir   = 'ChemicalX'
-build_dir   = 'build'
-output_dir  = 'dist'
-target      = 'cx'
-source      = [join('src', 'main.c'),
-               join('src', 'cassowary', 'abstract_variable.c')]
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# Output
-TARGET = join(output_dir, target)
+# Config variables
+debug         = False
+input_dir     = 'ChemicalX'
+build_dir     = 'build'
+output_dir    = 'dist'
 
-# C Compiler
-CC = clang
+# Source files
+container_src = [
+    join('src', 'utils.c'),
+    join('src', 'containers', 'list.c'),
+    # join('src', 'containers', 'map.c'),
+    # join('external', 'xxHash',     'xxhash.c'),
+]
+cassowary_src = [
+    join('src', 'cassowary', 'abstract_variable.c'),
+    # join('src', 'cassowary', 'expression.c'),
+]
+chemicalx_src = []
+
+# Include dirs
+container_inc = [
+    'include',
+    'external',
+]
+cassowary_inc = []
+chemicalx_inc = []
+
+# Library dirs
+container_dir = []
+cassowary_dir = []
+chemicalx_dir = []
+
+# Libraries
+container_lib = []
+cassowary_lib = []
+chemicalx_lib = []
+
+# Library outputs
+container_out = 'cx_container'
+cassowary_out = 'cx_cassowary'
+chemicalx_out = 'cx'
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# Source files
+container_tests_src = [
+    join('tests', 'containers', 'tests.c'),
+    join('tests', 'containers', 'list_types.c'),
+    join('tests', 'containers', 'list_tests.c'),
+]
+cassowary_tests_src = []
+chemicalx_tests_src = []
+
+# Include dirs
+container_tests_inc = [
+    '.',
+    'include',
+]
+cassowary_tests_inc = []
+chemicalx_tests_inc = []
+
+# Library dirs
+container_tests_dir = [
+    output_dir,
+]
+cassowary_tests_dir = [
+    output_dir,
+]
+chemicalx_tests_dir = [
+    output_dir,
+]
+
+# Libraries
+container_tests_lib = [
+    container_out,
+]
+cassowary_tests_lib = [
+    container_out,
+    cassowary_out,
+]
+chemicalx_tests_lib = [
+    container_out,
+    cassowary_out,
+]
+
+# Executables
+container_tests_out = 'cx_container_tests'
+cassowary_tests_out = 'cx_cassowary_tests'
+chemicalx_tests_out = 'cx_chemicalx_tests'
+
+
+
+#------------------------------------------------------------------------------#
+# Library outputs
+CONTAINER_LIB_TARGET = join(output_dir, container_out)
+CASSOWARY_LIB_TARGET = join(output_dir, cassowary_out)
+CHEMICALX_LIB_TARGET = join(output_dir, chemicalx_out)
+
+# Executable outputs
+CONTAINER_TESTS_TARGET = join(output_dir, container_tests_out)
+CASSOWARY_TESTS_TARGET = join(output_dir, cassowary_tests_out)
+CHEMICALX_TESTS_TARGET = join(output_dir, chemicalx_tests_out)
+
+# C Compiler (gcc|clang)
+CC = 'clang'
 
 # C Compiler Flags
 CCFLAGS = ['v',
@@ -69,43 +157,73 @@ CLANGFLAGS = ['fcolor-diagnostics',
               'fmacro-backtrace-limit=0']
 
 # Add compiler specific flags
-CCFLAGS.extend(GCCFLAGS if CC == gcc else CLANGFLAGS if CC == clang else [])
+CCFLAGS.extend(GCCFLAGS if CC == 'gcc' else CLANGFLAGS if CC == 'clang' else [])
 
 # C Pre-Processor Path (Include)
-CPPPATH = [join(build_dir, 'include')]
+CPPPATH = []
 
 # Library paths
 LIBPATH = ['/usr/lib',
            '/usr/local/lib']
 
-# Libraries
-LIBS = []
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# ADMINISTRATION
+dev_hook_run = Environment().Command(target='dev_hook',
+                                     source=None,
+                                     action='python3 build.py')
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# CONTAINER LIBRARY
 
 # Create environment
-environment = Environment(CC=CC,
-                          CCFLAGS=['-' + flag for flag in CCFLAGS if flag],
-                          CPPPATH=CPPPATH,
-                          LIBPATH=LIBPATH,
-                          LIBS=LIBS)
-
+containers_env = \
+    Environment(CC=CC,
+                CCFLAGS=['-' + flag for flag in CCFLAGS if flag],
+                CPPPATH=CPPPATH + [join(build_dir, d) for d in container_inc],
+                LIBPATH=LIBPATH + container_dir,
+                LIBS=container_lib)
 # Specify output directory
-environment.VariantDir(variant_dir=build_dir,
-                       src_dir=input_dir)
+containers_env.VariantDir(variant_dir=build_dir,
+                          src_dir=input_dir)
+# Create library
+containers_env_out = \
+    containers_env.SharedLibrary(target=CONTAINER_LIB_TARGET,
+                                 source=[join(build_dir, f) for f in container_src])
 
-compile_src = environment.Program(target=TARGET,
-                                  source=[join(build_dir, file) for file in source])
 
-# Run "administrative" cutils-tools first
-cutils_hook = environment.Command(target='cutils',
-                                  source=None,
-                                  action='python3 build.py')
-environment.Depends(compile_src, cutils_hook)
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# CONTAINER TESTS
 
-# If `run` is specified as argument
-execute_app = environment.Command(target='run',
-                                  source=None,
-                                  action='./' + TARGET)
-environment.Depends(execute_app, compile_src)
+# Create environment
+containers_tests_env = \
+    Environment(CC=CC,
+                CCFLAGS=['-' + flag for flag in CCFLAGS if flag],
+                CPPPATH=CPPPATH + [join(build_dir, d) for d in container_tests_inc],
+                LIBPATH=LIBPATH + container_tests_dir,
+                LIBS=container_tests_lib)
+# Specify output directory
+containers_tests_env.VariantDir(variant_dir=build_dir,
+                                src_dir=input_dir)
+# Create library
+containers_tests_env_out = \
+    containers_tests_env.Program(target=CONTAINER_TESTS_TARGET,
+                                 source=[join(build_dir, f) for f in container_tests_src])
 
-# If there is no argument specified, only compile target
-environment.Default(TARGET)
+# This program depends on libraries
+containers_tests_env.Depends(containers_tests_env_out, containers_env_out)
+
+# Runs tests
+containers_tests_env_run = \
+    containers_tests_env.Command(target='run_container_tests',
+                                 source=None,
+                                 action='./' + CONTAINER_TESTS_TARGET)
+# The execution depends on the program
+containers_tests_env.Depends(containers_tests_env_run, containers_tests_env_out)
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# MAKE SURE DEVELOPER-HOOK IS ALWAYS RUNNING
+containers_env.Depends(containers_env_out, dev_hook_run)
+containers_tests_env.Depends(containers_tests_env_run, dev_hook_run)

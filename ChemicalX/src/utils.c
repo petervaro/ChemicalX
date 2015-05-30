@@ -6,7 +6,7 @@
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
 **                       Version: 0.0.1.123 (20150530)                        **
-**                      File: ChemicalX/include/utils.h                       **
+**                        File: ChemicalX/src/utils.c                         **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
 **                       Copyright (C) 2015 Peter Varo                        **
@@ -27,11 +27,10 @@
 **                                                                            **
 ************************************************************************ INFO */
 
-/* Header guard */
-#ifndef __CHEMICAL_X_UTILS_H_4967258996282923__
-#define __CHEMICAL_X_UTILS_H_4967258996282923__
-
 /* Include standard headers */
+#include <stdio.h> /*
+    func  : printf
+*/
 #include <stddef.h> /*
     type  : size_t
             ptrdiff_t
@@ -40,61 +39,129 @@
     type  : bool
 */
 
-/*----------------------------------------------------------------------------*/
-/* V: value,
-   S: struct name
-   M: members stringified
-   E: (line) ending */
-#define cx_STRINGIFY_BOOL(V)                     V ? "true" : "false"
-#define cx_FORMAT_STRUCT(S, M, E)                "<struct " S "{" M "} at %p>" E
-#define cx_FORMAT_STRUCT_NULL(S, E)              "NULL was <struct " S ">" E
-#define cx_FORMAT_CONTAINER_STRUCT_BEFORE(S, M)  "<struct " S "{" M "} has ("
-#define cx_FORMAT_CONTAINER_STRUCT_AFTER(E)      ") at %p>" E
+/* Include ChemicalX headers */
+#include "utils.h" /*
+    macro : cx_STRINGIFY_BOOL
+*/
 
 /*----------------------------------------------------------------------------*/
 void
-cx_Bool_print(bool *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_Int_print(int *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_LongInt_print(long int *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_LongLongInt_print(long long int *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_UnsignedInt_print(unsigned int *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_UnsignedLongInt_print(unsigned long int *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_UnsignedLongLongInt_print(unsigned long long int *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_SizeT_print(size_t *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_PtrdiffT_print(ptrdiff_t *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_Char_print(char *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_CharPtr_print(char *const *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_Float_print(float *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_Double_print(double *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_LongDouble_print(long double *const value);
-/*----------------------------------------------------------------------------*/
-void
-cx_Ptr_print(void *const *const value);
+cx_Bool_print(bool *const value)
+{
+    printf("%s", cx_STRINGIFY_BOOL(*value));
+}
 
-#endif /* __CHEMICAL_X_UTILS_H_4967258996282923__ */
+
+/*----------------------------------------------------------------------------*/
+void
+cx_Int_print(int *const value)
+{
+    printf("%d", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_LongInt_print(long int *const value)
+{
+    printf("%ldL", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_LongLongInt_print(long long int *const value)
+{
+    printf("%lldLL", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_UnsignedInt_print(unsigned int *const value)
+{
+    printf("%uU", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_UnsignedLongInt_print(unsigned long int *const value)
+{
+    printf("%luUL", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_UnsignedLongLongInt_print(unsigned long long int *const value)
+{
+    printf("%lluULL", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_SizeT_print(size_t *const value)
+{
+    printf("(size_t)%zu", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_PtrdiffT_print(ptrdiff_t *const value)
+{
+    printf("(ptrdiff_t)%td", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_Char_print(char *const value)
+{
+    if (*value)
+        printf("'%c'", *value);
+    else
+        printf("'\\0'");
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_CharPtr_print(char *const *const value)
+{
+    printf("\"%s\"", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_Float_print(float *const value)
+{
+    printf("%ff", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_Double_print(double *const value)
+{
+    printf("%f", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_LongDouble_print(long double *const value)
+{
+    printf("%LfL", *value);
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+cx_Ptr_print(void *const *const value)
+{
+    printf("%p", *value);
+}

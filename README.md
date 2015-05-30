@@ -20,3 +20,8 @@ Why `ChemicalX`?
 
 So what? Well, first of all it means that `ChemicalX` can give you and your
 application a huge boost -- literally *superpowers*.
+
+Dependencies
+------------
+
+- [xxHash](https://github.com/Cyan4973/xxHash) *(already included)*

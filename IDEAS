@@ -1,0 +1,54 @@
+Structure
+---------
+
+1. Everything is a Layout
+2. Layouts can be arranged in a Region
+3. A Region is a layout as well
+4. The top-level region is the Window
+
+    #define cx_Layout_HEAD() <members...>
+
+    typedef struct
+    {
+        cx_Layout_HEAD()
+    } cx_Layout;
+
+    #define cx_Region_HEAD() cx_Layout_HEAD() <members...>
+
+    typedef struct
+    {
+        cx_Region_HEAD()
+    } cx_Region;
+
+    #define cx_Window_HEAD() cx_Region_HEAD() <members...>
+
+    typedef struct
+    {
+        cx_Window_HEAD()
+    } cx_Window;
+
+
+
+1. A layout can have one of these 3 representations:
+  - Canvas                        => Vector drawing
+  - Texture                       => Bitmap rendering
+  - StaticCanvas (static-texture) => Vector to bitmap
+  - (Later on: Stream             => Animation/Video)
+
+    enum
+    {
+        Canvas;
+        Texture;
+        StaticCanvas;
+    } LayoutType;
+
+    typedef struct
+    {
+        LayoutType type;
+        union
+        {
+            Canvas canvas;
+            Texture texture;
+            StaticCanvas;
+        }
+    } Layout;
