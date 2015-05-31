@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.2.140 (20150530)                        **
+**                       Version: 0.0.3.198 (20150531)                        **
 **               File: ChemicalX/tests/containers/list_tests.c                **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -30,15 +30,14 @@
 /* Include standard headers */
 #include <stdio.h> /*
     const : stderr
-    func  : printf
-            fprintf
+    func  : fprintf
 */
 
 /* Include test headers */
 #include "tests/prefixes.h" /*
-    macro : OKAY
-            FAIL
-            DEAD
+    macro : cx_OKAY
+            cx_FAIL
+            cx_DEAD
 */
 #include "tests/containers/list_types.h" /*
     type  : IntList
@@ -55,6 +54,11 @@
             FloatList_del
 */
 
+#define _TEST(N, M) "Test case (" #N ") => " M "\n"
+#define TEST(...) _TEST(__VA_ARGS__)
+
+#define TOSTR(V) #V
+
 /* Constant data */
 static int ints[] = {1, 1, 2, 3, 5, 8, 13, 21, 34};
 #define ints_LENGTH sizeof ints / sizeof(int)
@@ -69,15 +73,17 @@ list_test_case_001(void)
 {
     IntList *i;
     if (!IntList_from_data(&i, ints_LENGTH, ints))
-    {
-        fprintf(stderr, DEAD "Cannot perform this test case\n");
-        return;
-    }
+        goto Internal_Error;
+
     IntList_println(&i);
     IntList_del(&i);
     IntList_println(&i);
 
-    printf(OKAY "Test case `001` passed\n");
+    fprintf(stderr, cx_OKAY(TEST(001, "Passed")));
+    return;
+
+    Internal_Error:
+        fprintf(stderr, cx_DEAD(TEST(001, "Internal error occured")));
 }
 
 
@@ -87,15 +93,17 @@ list_test_case_002(void)
 {
     FloatList *f;
     if (!FloatList_from_data(&f, floats_LENGTH, floats))
-    {
-        fprintf(stderr, DEAD "Cannot perform this test case\n");
-        return;
-    }
+        goto Internal_Error;
+
     FloatList_println(&f);
     FloatList_del(&f);
     FloatList_println(&f);
 
-    printf(OKAY "Test case `002` passed\n");
+    fprintf(stderr, cx_OKAY(TEST(002, "Passed")));
+    return;
+
+    Internal_Error:
+        fprintf(stderr, cx_DEAD(TEST(002, "Internal error occured")));
 }
 
 
@@ -130,7 +138,7 @@ list_test_case_003(void)
     CharPtrList_println(&cpl_5);
     CharPtrList_println(&cpl_6);
 
-    printf(OKAY "Test case `003`: 6 CharPtrLists have been created\n");
+    fprintf(stderr, cx_OKAY(TEST(003, "6 CharPtrLists have been created")));
 
     CharPtrList *cpls[] = {cpl_1, cpl_2, cpl_3, cpl_4, cpl_5, cpl_6};
 
@@ -149,7 +157,7 @@ list_test_case_003(void)
     CharPtrListList_println(&cpll_2);
     CharPtrListList_println(&cpll_3);
 
-    printf(OKAY "Test case `003`: 3 CharPtrListLists have been created\n");
+    fprintf(stderr, cx_OKAY(TEST(003, "3 CharPtrListLists have been created")));
 
     CharPtrListListList *cplll;
 
@@ -158,7 +166,7 @@ list_test_case_003(void)
 
     CharPtrListListList_println(&cplll);
 
-    printf(OKAY "Test case `003`: 1 CharPtrListListList has been created\n");
+    fprintf(stderr, cx_OKAY(TEST(003, "CharPtrListListList has been created")));
 
     /* Cleanup */
     CharPtrListListList_del(&cplll);
@@ -174,9 +182,170 @@ list_test_case_003(void)
     CharPtrList_del(&cpl_5);
     CharPtrList_del(&cpl_6);
 
-    printf(OKAY "Test case `003` passed\n");
+    fprintf(stderr, cx_OKAY(TEST(003, "Passed")));
     return;
 
     Internal_Error:
-        fprintf(stderr, DEAD "Cannot perform this test case\n");
+        fprintf(stderr, cx_DEAD(TEST(003, "Internal error occured")));
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+list_test_case_004(void)
+{
+    static bool is_failed = false;
+
+    static CharList *list;
+    static size_t    length;
+    static size_t    expected = 0;
+
+    CharList_new(&list);
+    CharList_len(list, &length);
+    if (length != expected)
+    {
+        is_failed = true;
+        fprintf(stderr, cx_FAIL(TEST(004, "Length is not 0")));
+    }
+    else
+        fprintf(stderr, cx_OKAY(TEST(004, "Length is 0")));
+    CharList_del(&list);
+
+    expected = 4;
+    CharList_from_data(&list, expected, (char[]){'x', 'y', 'z', 'w'});
+    CharList_len(list, &length);
+    if (length != expected)
+    {
+        is_failed = true;
+        fprintf(stderr, cx_FAIL(TEST(004, "Length is not 4")));
+    }
+    else
+        fprintf(stderr, cx_OKAY(TEST(004, "Length is 4")));
+    CharList_del(&list);
+
+    if (CharList_len(list, &length))
+    {
+        is_failed = true;
+        fprintf(stderr, cx_FAIL(TEST(004, "Length method should return `false`")));
+    }
+    else
+        fprintf(stderr, cx_OKAY(TEST(004, "Length method returned `false`")));
+
+    if (is_failed)
+        fprintf(stderr, cx_FAIL(TEST(004, "Failed")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(004, "Passed")));
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+list_test_case_005(void)
+{
+    static bool is_failed = false;
+
+    static FloatList *list;
+    static size_t     length;
+    static size_t     expected = floats_LENGTH;
+
+    if (!FloatList_from_data(&list, floats_LENGTH, floats))
+        goto Internal_Error;
+    FloatList_len(list, &length);
+
+    if (length != expected)
+    {
+        is_failed = true;
+        fprintf(stderr, cx_FAIL(TEST(005, "Length is not " TOSTR(floats_LENGTH))));
+    }
+    else
+        fprintf(stderr, cx_OKAY(TEST(005, "Length is " TOSTR(floats_LENGTH))));
+
+    expected = 0;
+    FloatList_clear(list);
+    FloatList_len(list, &length);
+
+    if (length != expected)
+    {
+        is_failed = true;
+        fprintf(stderr, cx_FAIL(TEST(005, "Length is not 0")));
+    }
+    else
+        fprintf(stderr, cx_OKAY(TEST(005, "Length is 0")));
+
+    FloatList_del(&list);
+
+    if (FloatList_clear(list))
+    {
+        is_failed = true;
+        fprintf(stderr, cx_FAIL(TEST(005, "Clear method should return `false`")));
+    }
+    else
+        fprintf(stderr, cx_OKAY(TEST(005, "Clear method returned `false`")));
+
+    if (is_failed)
+        fprintf(stderr, cx_FAIL(TEST(005, "Failed")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(005, "Passed")));
+    return;
+
+    Internal_Error:
+        fprintf(stderr, cx_DEAD(TEST(005, "Internal error occured")));
+}
+
+
+/*----------------------------------------------------------------------------*/
+void
+list_test_case_006(void)
+{
+    static bool is_failed = false;
+
+    static IntList *list;
+    static size_t   copied;
+    static int      buffer[ints_LENGTH];
+
+    if (!IntList_from_data(&list, ints_LENGTH, ints))
+        goto Internal_Error;
+    if (!IntList_to_array(list, &copied, ints_LENGTH, buffer))
+        goto Internal_Error;
+
+    if (copied != ints_LENGTH)
+        fprintf(stderr, cx_FAIL(TEST(006, "Buffer lengths are not equal")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(006, "Buffer lengths are equal")));
+
+    for (size_t i=0; i<ints_LENGTH; i++)
+        if (buffer[i] != ints[i])
+        {
+            is_failed = true;
+            fprintf(stderr, cx_FAIL(TEST(006, "The new buffer is not the "
+                                              "same as the old one")));
+            break;
+        }
+    fprintf(stderr, cx_OKAY(TEST(005, "The two buffers are identical")));
+
+    if (IntList_to_array(list, NULL, 0, NULL))
+        fprintf(stderr, cx_FAIL(TEST(006, "ToArray method shoudl return `false`")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(006, "ToArray method returned `false`")));
+
+    if (IntList_to_array(list, &copied, 0, NULL))
+        fprintf(stderr, cx_FAIL(TEST(006, "ToArray method shoudl return `false`")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(006, "ToArray method returned `false`")));
+
+    if (IntList_to_array(list, &copied, ints_LENGTH, NULL))
+        fprintf(stderr, cx_FAIL(TEST(006, "ToArray method shoudl return `false`")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(006, "ToArray method returned `false`")));
+
+    FloatList_del(&list);
+
+    if (is_failed)
+        fprintf(stderr, cx_FAIL(TEST(006, "Failed")));
+    else
+        fprintf(stderr, cx_OKAY(TEST(006, "Passed")));
+    return;
+
+    Internal_Error:
+        fprintf(stderr, cx_DEAD(TEST(006, "Internal error occured")));
 }

@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.123 (20150530)                        **
+**                       Version: 0.0.3.200 (20150531)                        **
 **                   File: ChemicalX/src/containers/list.c                    **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -27,6 +27,7 @@
 **                                                                            **
 ************************************************************************ INFO */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include standard headers */
 #include <stdio.h> /*
     macro : NULL
@@ -47,6 +48,11 @@
     func  : memcpy
 */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+/* Include jemalloc headers */
+#include <jemalloc/jemalloc.h>
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include ChemicalX headers */
 #include "containers/list.h" /*
     type  : cx_List
@@ -56,6 +62,8 @@
     macro : cx_FORMAT_CONTAINER_STRUCT_BEFORE
             cx_FORMAT_CONTAINER_STRUCT_AFTER
 */
+
+
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 static inline void
@@ -179,8 +187,8 @@ cx_List_new_nodes(cx_List     *self,
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cx_List_new(cx_List **self,
-            size_t    item_size)
+cx_List_new(cx_List **const self,
+            size_t          item_size)
 {
     cx_List *list;
     if (!(list = malloc(sizeof(cx_List))))
@@ -209,10 +217,10 @@ cx_List_new(cx_List **self,
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cx_List_from_data(cx_List **self,
-                  size_t    item_size,
-                  size_t    item_count,
-                  void     *items)
+cx_List_from_data(cx_List **const self,
+                  size_t          item_size,
+                  size_t          item_count,
+                  void     *const items)
 {
     cx_List *list;
     if (!cx_List_new(&list, item_size))
@@ -245,7 +253,7 @@ cx_List_from_data(cx_List **self,
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cx_List_del(cx_List **self)
+cx_List_del(cx_List **const self)
 {
     /* If there was an error, or the instance has been deleted */
     if (!*self)
@@ -322,4 +330,126 @@ cx_List_println(cx_List *const *const self,
                 void                (*data_printer)())
 {
     cx_List_PRINT((*self), data_printer, ", ", "\n")
+}
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+bool
+cx_List_len(cx_List *const self,
+            size_t        *length)
+{
+    /* If there was an error, or the instance has been deleted */
+    if (!self)
+    {
+        fprintf(stderr, "cx_List_len(): Cannot get length of cx_List\n"
+                        "(Hint: First argument is "
+                        cx_FORMAT_STRUCT_NULL("cx_List", "") ")\n");
+        return false;
+    }
+    /* If instance is not NULL */
+    *length = self->length;
+    return true;
+}
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+bool
+cx_List_clear(cx_List *const self)
+{
+    /* If there was an error, or the instance has been deleted */
+    if (!self)
+    {
+        fprintf(stderr, "cx_List_clear(): Cannot clear cx_List\n"
+                        "(Hint: First argument is "
+                        cx_FORMAT_STRUCT_NULL("cx_List", "") ")\n");
+        return false;
+    }
+    /* If instance is not NULL, free all nodes of the instance */
+    cx_ListNode *next,
+                *node = self->head;
+    while (node)
+    {
+        next = node->next;
+        free(node);
+        node = next;
+    }
+
+    /* Set values "empty" */
+    self->length = 0;
+    self->head   = NULL;
+    self->tail   = NULL;
+    return true;
+}
+
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+bool
+cx_List_to_array(cx_List *const self,
+                 size_t        *copy_count,
+                 size_t         item_count,
+                 void          *items)
+{
+    /* If there was an error, or the instance has been deleted */
+    if (!self)
+    {
+        fprintf(stderr, "cx_List_to_array(): Cannot get items from cx_List\n"
+                        "(Hint: 1st argument is "
+                        cx_FORMAT_STRUCT_NULL("cx_List", "") ")\n");
+        goto Self_Is_NULL;
+    }
+    else if (!copy_count)
+    {
+        fprintf(stderr, "cx_List_to_array(): Cannot tell how many "
+                        "items were copied to the array\n"
+                        "(Hint: 2nd argument is NULL "
+                        "(pointer to size_t is NULL))\n");
+        goto Copied_Is_NULL;
+    }
+    /* If array length is zero */
+    else if (!item_count)
+    {
+        fprintf(stderr, "cx_List_to_array(): Cannot copy data to the array\n"
+                        "(Hint: 3rd argument is 0 (length of array is zero))\n");
+        goto Array_Length_Is_Zero;
+    }
+    /* If array is not a valid pointer NULL */
+    else if (!items)
+    {
+        fprintf(stderr, "cx_List_to_array(): Cannot write data to array\n"
+                        "(Hint: 4th argument is NULL "
+                        "(pointer to array is NULL))\n");
+        goto Array_Is_NULL;
+    }
+
+    /* Limit item-count to max (length of list) */
+    item_count   = item_count > self->length ? self->length : item_count;
+
+    /* If all values are not 0 nor NULL */
+    size_t       size = self->data_size;
+    char *buffer      = items;
+    cx_ListNode *node = self->head;
+    for (size_t i=0; i<item_count; i++)
+    {
+        if (!memcpy(buffer + i*size, &node->data, size))
+        {
+            fprintf(stderr, "cx_List_to_array(): Cannot copy "
+                            "cx_ListNode->data to array\n"
+                            "(Hint: `memcpy` (from <string.h>) failed)\n");
+            *copy_count = i + 1;
+            return false;
+        }
+        node = node->next;
+    }
+
+    /* If everythign went fine */
+    *copy_count = item_count;
+    return true;
+
+    /* If there was an error */
+    Array_Is_NULL:
+    Array_Length_Is_Zero:
+    Self_Is_NULL:
+        *copy_count = 0;
+    Copied_Is_NULL:
+        return false;
 }

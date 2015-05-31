@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ## INFO ########################################################################
 ##                                                                            ##
 ##                                 ChemicalX                                  ##
@@ -5,8 +6,8 @@
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.3.200 (20150531)                        ##
-##                                 File: TODO                                 ##
+##                       Version: 0.0.2.142 (20150531)                        ##
+##                             File: maintain.py                              ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
 ##                       Copyright (C) 2015 Peter Varo                        ##
@@ -27,14 +28,54 @@
 ##                                                                            ##
 ######################################################################## INFO ##
 
-#----------------------------- 1 POSTS IN 1 FILES -----------------------------#
-TODO:
-  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-  # 1
-  - file: ChemicalX/src/cassowary/abstract_variable.c
-    line: 76
-    note: |
-          if name is NULL?
-          if name_length is 0? (=> name_length - 1) 
+# Import python modules
+from os.path import join
+from copy    import deepcopy
 
+# Module level constants
+CURRENT_DIR = '.'
+POST_COMMIT = 0  # True or False => skip CLIC (version) changes only
 
+# Import cutils modules
+try:
+    import cutils.ccom
+    import cutils.clic
+    import cutils.cver
+
+    web_dev = '.js', '.css', '.html'
+    c_build = ('SConstruct',)
+
+    exclude = deepcopy(cutils.ccom.EXCLUDE)
+    exclude['folders'].append('build')
+    exclude['folders'].append('dist')
+    exclude['folders'].append(join('ChemicalX', 'external'))
+    exclude['folders'].append('cassowary_implementations')
+
+    ccom_include = deepcopy(cutils.ccom.INCLUDE)
+    ccom_include['extensions'].extend(web_dev)
+    ccom_include['names'].extend(c_build)
+
+    clic_include = deepcopy(cutils.clic.INCLUDE)
+    clic_include['extensions'].extend(web_dev)
+    clic_include['names'].extend(c_build)
+
+    # Update version
+    cutils.cver.version(CURRENT_DIR,
+                        sub_max=9,
+                        rev_max=9,
+                        build_max=999)
+
+    # Collect all special comments
+    cutils.ccom.collect(CURRENT_DIR,
+                        include=ccom_include,
+                        exclude=exclude,
+                        overwrite=POST_COMMIT)
+
+    # Update header comments
+    cutils.clic.header(CURRENT_DIR,
+                       include=clic_include,
+                       exclude=exclude,
+                       overwrite=POST_COMMIT)
+except ImportError:
+    print('[WARNING] cutils modules are missing: '
+          'install it from http://www.cutils.org')

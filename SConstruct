@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.129 (20150530)                        ##
+##                       Version: 0.0.2.158 (20150531)                        ##
 ##                              File: SConstruct                              ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
@@ -33,98 +33,8 @@ print '\n{:#^80}\n'.format(' SCONS BUILD ')
 # Import python modules
 from os.path import join
 
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# Config variables
-debug         = False
-input_dir     = 'ChemicalX'
-build_dir     = 'build'
-output_dir    = 'dist'
-
-# Source files
-container_src = [
-    join('src', 'utils.c'),
-    join('src', 'containers', 'list.c'),
-    # join('src', 'containers', 'map.c'),
-    # join('external', 'xxHash',     'xxhash.c'),
-]
-cassowary_src = [
-    join('src', 'cassowary', 'abstract_variable.c'),
-    # join('src', 'cassowary', 'expression.c'),
-]
-chemicalx_src = []
-
-# Include dirs
-container_inc = [
-    'include',
-    'external',
-]
-cassowary_inc = []
-chemicalx_inc = []
-
-# Library dirs
-container_dir = []
-cassowary_dir = []
-chemicalx_dir = []
-
-# Libraries
-container_lib = []
-cassowary_lib = []
-chemicalx_lib = []
-
-# Library outputs
-container_out = 'cx_container'
-cassowary_out = 'cx_cassowary'
-chemicalx_out = 'cx'
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# Source files
-container_tests_src = [
-    join('tests', 'containers', 'tests.c'),
-    join('tests', 'containers', 'list_types.c'),
-    join('tests', 'containers', 'list_tests.c'),
-]
-cassowary_tests_src = []
-chemicalx_tests_src = []
-
-# Include dirs
-container_tests_inc = [
-    '.',
-    'include',
-]
-cassowary_tests_inc = []
-chemicalx_tests_inc = []
-
-# Library dirs
-container_tests_dir = [
-    output_dir,
-]
-cassowary_tests_dir = [
-    output_dir,
-]
-chemicalx_tests_dir = [
-    output_dir,
-]
-
-# Libraries
-container_tests_lib = [
-    container_out,
-]
-cassowary_tests_lib = [
-    container_out,
-    cassowary_out,
-]
-chemicalx_tests_lib = [
-    container_out,
-    cassowary_out,
-]
-
-# Executables
-container_tests_out = 'cx_container_tests'
-cassowary_tests_out = 'cx_cassowary_tests'
-chemicalx_tests_out = 'cx_chemicalx_tests'
-
-
+# Import settings
+from config import *
 
 #------------------------------------------------------------------------------#
 # Library outputs
@@ -168,10 +78,10 @@ LIBPATH = ['/usr/lib',
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# ADMINISTRATION
-dev_hook_run = Environment().Command(target='dev_hook',
+# MAINTENANCE
+maintain_run = Environment().Command(target='maintain',
                                      source=None,
-                                     action='python3 build.py')
+                                     action='python3 maintain.py')
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
@@ -224,6 +134,21 @@ containers_tests_env.Depends(containers_tests_env_run, containers_tests_env_out)
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# MAKE SURE DEVELOPER-HOOK IS ALWAYS RUNNING
-containers_env.Depends(containers_env_out, dev_hook_run)
-containers_tests_env.Depends(containers_tests_env_run, dev_hook_run)
+# RUN ALL TESTS
+all_tests_env = Environment()
+all_tests_env_run = all_tests_env.Command(target='tests',
+                                          source=None,
+                                          action='')
+# The execution depends on all other tests
+all_tests_env.Depends(all_tests_env_run, containers_tests_env_run)
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# MAKE SURE MAINTENANCE IS ALWAYS RUNNING
+containers_env.Depends(containers_env_out, maintain_run)
+containers_tests_env.Depends(containers_tests_env_run, maintain_run)
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# INSTALLATION
+

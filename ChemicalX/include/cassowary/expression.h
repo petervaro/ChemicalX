@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.071 (20150530)                        **
+**                       Version: 0.0.2.172 (20150531)                        **
 **               File: ChemicalX/include/cassowary/expression.h               **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -31,10 +31,13 @@
 #ifndef __CHEMICAL_X_CASSOWARY_EXPRESSION_H_5751759941745008__
 #define __CHEMICAL_X_CASSOWARY_EXPRESSION_H_5751759941745008__
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include ChemicalX headers */
 #include "containers/map.h" /*
     type  : cx_HashMap
 */
+
+
 
 /*----------------------------------------------------------------------------*/
 /* Properties of cass_Expression */

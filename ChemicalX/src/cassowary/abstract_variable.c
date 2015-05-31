@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
+**                       Version: 0.0.2.172 (20150531)                        **
 **             File: ChemicalX/src/cassowary/abstract_variable.c              **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -27,6 +27,7 @@
 **                                                                            **
 ************************************************************************ INFO */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include standard headers */
 #include <stddef.h> /*
     type  : size_t
@@ -50,6 +51,11 @@
     func  : strncpy
 */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+/* Include jemalloc headers */
+#include <jemalloc/jemalloc.h>
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include ChemicalX headers */
 #include "cassowary/abstract_variable.h" /*
     type  : cass_AbstractVariable
@@ -63,9 +69,9 @@
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length)
+cass_AbstractVariable_new(cass_AbstractVariable **const self,
+                          const char             *const name,
+                          const size_t                  name_length)
 {
     /* TODO: if name is NULL?
              if name_length is 0? (=> name_length - 1) */
@@ -126,7 +132,7 @@ cass_AbstractVariable_new(cass_AbstractVariable **self,
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_del(cass_AbstractVariable **self)
+cass_AbstractVariable_del(cass_AbstractVariable **const self)
 {
     /* If there was an error, or the instance has been deleted */
     if (!*self)

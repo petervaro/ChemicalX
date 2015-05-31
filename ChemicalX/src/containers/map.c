@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.071 (20150530)                        **
+**                       Version: 0.0.2.172 (20150531)                        **
 **                    File: ChemicalX/src/containers/map.c                    **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -27,11 +27,17 @@
 **                                                                            **
 ************************************************************************ INFO */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+/* Include jemalloc headers */
+#include <jemalloc/jemalloc.h>
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include xxHash headers */
 #include "external/xxHash/xxhash.h" /*
     macro :
 */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include ChemicalX headers */
 #include "containers/list.h" /*
     type  : cx_List

@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.2.132 (20150530)                        **
+**                       Version: 0.0.3.194 (20150531)                        **
 **               File: ChemicalX/tests/containers/list_tests.h                **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -40,5 +40,14 @@ list_test_case_002(void);
 /*----------------------------------------------------------------------------*/
 void
 list_test_case_003(void);
+/*----------------------------------------------------------------------------*/
+void
+list_test_case_004(void);
+/*----------------------------------------------------------------------------*/
+void
+list_test_case_005(void);
+/*----------------------------------------------------------------------------*/
+void
+list_test_case_006(void);
 
 #endif /* __CHEMICAL_X_TESTS_CONTAINERS_LIST_TESTS_H_8138427977812015__ */

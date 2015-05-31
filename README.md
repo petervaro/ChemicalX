@@ -8,7 +8,7 @@ What is `ChemicalX`?
 It is a constraint based, OpenGL powered, crossplatform, free and open source
 GUI framework.
 
-Why `ChemicalX`?
+Why is it called `ChemicalX`?
 ---------------
 
 > Chemical X is a powerful chemical that gives people superpowers and special
@@ -25,3 +25,4 @@ Dependencies
 ------------
 
 - [xxHash](https://github.com/Cyan4973/xxHash) *(already included)*
+- [jemalloc](http://www.canonware.com/jemalloc)

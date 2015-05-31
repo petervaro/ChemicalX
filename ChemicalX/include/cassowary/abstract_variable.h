@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.122 (20150530)                        **
+**                       Version: 0.0.2.172 (20150531)                        **
 **           File: ChemicalX/include/cassowary/abstract_variable.h            **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -31,6 +31,7 @@
 #ifndef __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
 #define __CHEMICAL_X_CASSOWARY_ABSTRACT_VARIABLE_H_32906941309829807__
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include standard headers */
 #include <stddef.h> /*
     type  : size_t
@@ -38,6 +39,8 @@
 #include <stdbool.h> /*
     type  : bool
 */
+
+
 
 /*----------------------------------------------------------------------------*/
 /* Properties of cass_AbstractVariable */
@@ -58,12 +61,12 @@ typedef struct
 } cass_AbstractVariable;
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cass_AbstractVariable_new(cass_AbstractVariable **self,
-                          const char             *name,
-                          const size_t            name_length);
+cass_AbstractVariable_new(cass_AbstractVariable **const self,
+                          const char             *const name,
+                          const size_t                  name_length);
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_AbstractVariable_del(cass_AbstractVariable **self);
+cass_AbstractVariable_del(cass_AbstractVariable **const self);
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
 cass_AbstractVariable_print(cass_AbstractVariable *const *const self);

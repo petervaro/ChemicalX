@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.071 (20150530)                        **
+**                       Version: 0.0.2.172 (20150531)                        **
 **                 File: ChemicalX/src/cassowary/expression.c                 **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -27,6 +27,7 @@
 **                                                                            **
 ************************************************************************ INFO */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include standard headers */
 #include <stdlib.h> /*
     func  : malloc
@@ -38,6 +39,11 @@
             false
 */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+/* Include jemalloc headers */
+#include <jemalloc/jemalloc.h>
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include ChemicalX headers */
 #include "containers/hash_map.h" /*
     type  : cx_HashMap
@@ -52,7 +58,7 @@
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 bool
-cass_Expression_new(cass_Expression **self)
+cass_Expression_new(cass_Expression **const self)
 {
     cass_Expression *expr;
     if (!(expr = malloc(sizeof(cass_Expression))))
@@ -89,7 +95,7 @@ cass_Expression_new(cass_Expression **self)
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_Expression_del(cass_Expression **self)
+cass_Expression_del(cass_Expression **const self)
 {
     /* If there was an error, or the instance has been deleted */
     if (!*self)
@@ -105,7 +111,7 @@ cass_Expression_del(cass_Expression **self)
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 void
-cass_Expression_print(cass_Expression *self)
+cass_Expression_print(cass_Expression *const *const self)
 {
 
 }

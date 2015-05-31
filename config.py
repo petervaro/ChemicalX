@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ## INFO ########################################################################
 ##                                                                            ##
 ##                                 ChemicalX                                  ##
@@ -6,8 +5,8 @@
 ##                                                                            ##
 ##              Constraint based, OpenGL powered, crossplatform,              ##
 ##                     free and open source GUI framework                     ##
-##                       Version: 0.0.1.071 (20150530)                        ##
-##                               File: build.py                               ##
+##                       Version: 0.0.2.172 (20150531)                        ##
+##                              File: config.py                               ##
 ##                                                                            ##
 ##   For more information about the project, visit <http://chemicalx.org>.    ##
 ##                       Copyright (C) 2015 Peter Varo                        ##
@@ -30,52 +29,105 @@
 
 # Import python modules
 from os.path import join
-from copy    import deepcopy
 
-# Module level constants
-CURRENT_DIR = '.'
-POST_COMMIT = 0  # True or False => skip CLIC (version) changes only
 
-# Import cutils modules
-try:
-    import cutils.ccom
-    import cutils.clic
-    import cutils.cver
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# Basic settings
+debug         = False
+input_dir     = 'ChemicalX'
+build_dir     = 'build'
+output_dir    = 'dist'
 
-    web_dev = '.js', '.css', '.html'
-    c_build = ('SConstruct',)
 
-    exclude = deepcopy(cutils.ccom.EXCLUDE)
-    exclude['folders'].append('build')
-    exclude['folders'].append('dist')
-    exclude['folders'].append(join('ChemicalX', 'external'))
-    exclude['folders'].append('cassowary_implementations')
 
-    ccom_include = deepcopy(cutils.ccom.INCLUDE)
-    ccom_include['extensions'].extend(web_dev)
-    ccom_include['names'].extend(c_build)
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# Source files
+container_src = [
+    join('src', 'utils.c'),
+    join('src', 'containers', 'list.c'),
+    # join('src', 'containers', 'map.c'),
+    # join('external', 'xxHash',     'xxhash.c'),
+]
+cassowary_src = [
+    join('src', 'cassowary', 'abstract_variable.c'),
+    # join('src', 'cassowary', 'expression.c'),
+]
+chemicalx_src = []
 
-    clic_include = deepcopy(cutils.clic.INCLUDE)
-    clic_include['extensions'].extend(web_dev)
-    clic_include['names'].extend(c_build)
+# Include dirs
+container_inc = [
+    'include',
+    'external',
+]
+cassowary_inc = []
+chemicalx_inc = []
 
-    # Update version
-    cutils.cver.version(CURRENT_DIR,
-                        sub_max=9,
-                        rev_max=9,
-                        build_max=999)
+# Library dirs
+container_dir = []
+cassowary_dir = []
+chemicalx_dir = []
 
-    # Collect all special comments
-    cutils.ccom.collect(CURRENT_DIR,
-                        include=ccom_include,
-                        exclude=exclude,
-                        overwrite=POST_COMMIT)
+# Libraries
+container_lib = [
+    'jemalloc',
+]
+cassowary_lib = [
+    'jemalloc',
+]
+chemicalx_lib = [
+    'jemalloc',
+]
 
-    # Update header comments
-    cutils.clic.header(CURRENT_DIR,
-                       include=clic_include,
-                       exclude=exclude,
-                       overwrite=POST_COMMIT)
-except ImportError:
-    print('[WARNING] cutils modules are missing: '
-          'install it from http://www.cutils.org')
+# Library outputs
+container_out = 'cx_container'
+cassowary_out = 'cx_cassowary'
+chemicalx_out = 'cx'
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# Source files
+container_tests_src = [
+    join('tests', 'containers', 'tests.c'),
+    join('tests', 'containers', 'list_types.c'),
+    join('tests', 'containers', 'list_tests.c'),
+]
+cassowary_tests_src = []
+chemicalx_tests_src = []
+
+# Include dirs
+container_tests_inc = [
+    '.',
+    'include',
+]
+cassowary_tests_inc = []
+chemicalx_tests_inc = []
+
+# Library dirs
+container_tests_dir = [
+    output_dir,
+]
+cassowary_tests_dir = [
+    output_dir,
+]
+chemicalx_tests_dir = [
+    output_dir,
+]
+
+# Libraries
+container_tests_lib = [
+    container_out,
+]
+cassowary_tests_lib = [
+    container_out,
+    cassowary_out,
+]
+chemicalx_tests_lib = [
+    container_out,
+    cassowary_out,
+]
+
+# Executables
+container_tests_out = 'cx_container_tests'
+cassowary_tests_out = 'cx_cassowary_tests'
+chemicalx_tests_out = 'cx_chemicalx_tests'

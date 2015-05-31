@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.2.132 (20150530)                        **
+**                       Version: 0.0.3.194 (20150531)                        **
 **                  File: ChemicalX/tests/containers/tests.c                  **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -27,18 +27,24 @@
 **                                                                            **
 ************************************************************************ INFO */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include standard headers */
 #include <stdlib.h> /*
     const : EXIT_SUCCESS
             EXIT_FAILURE
 */
 
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Include test headers */
 #include "tests/containers/list_tests.h" /*
     func  : list_test_case_001
             list_test_case_002
             list_test_case_003
+            list_test_case_004
+            list_test_case_005
+            list_test_case_006
 */
+
 
 
 /*----------------------------------------------------------------------------*/
@@ -48,5 +54,8 @@ main(void)
     list_test_case_001();
     list_test_case_002();
     list_test_case_003();
+    list_test_case_004();
+    list_test_case_005();
+    list_test_case_006();
     return EXIT_SUCCESS;
 }

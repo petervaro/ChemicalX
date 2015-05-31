@@ -5,7 +5,7 @@
 **                                                                            **
 **              Constraint based, OpenGL powered, crossplatform,              **
 **                     free and open source GUI framework                     **
-**                       Version: 0.0.1.129 (20150530)                        **
+**                       Version: 0.0.3.189 (20150531)                        **
 **                      File: ChemicalX/tests/prefixes.h                      **
 **                                                                            **
 **   For more information about the project, visit <http://chemicalx.org>.    **
@@ -31,26 +31,49 @@
 #ifndef __CHEMICAL_X_TESTS_PREFIXES_H_3054625138382304__
 #define __CHEMICAL_X_TESTS_PREFIXES_H_3054625138382304__
 
-/* ANSI Escaped Decorators:
-     */
+/* Based on ANSI Escaped Decorators:
+    http://ascii-table.com/ansi-escape-sequences.php */
+
+/* Variables: CP: color-prefix
+              P : prefix
+              CM: color-message
+              M : message */
 
 /* Colors */
-#define RED     "\x1b[31"
-#define YELLOW  "\x1b[33"
-#define GREEN   "\x1b[32"
-#define WHITE   "\x1b[37"
-#define RESET   "\x1b[0m"
+#define cx_RED     "\x1b[31m"
+#define cx_GREEN   "\x1b[32m"
+#define cx_BLUE    "\x1b[34m"
+
+#define cx_CYAN    "\x1b[36m"
+#define cx_MAGENTA "\x1b[35m"
+#define cx_YELLOW  "\x1b[33m"
+
+#define cx_BLACK   "\x1b[30m"
+#define cx_WHITE   "\x1b[37m"
+
+#define cx_RESET   "\x1b[0m"
 
 /* Font style */
-#define REGULAR ";0m"
-#define BOLD    ";1m"
+#define cx_BOLD    "\x1b[1m"
 
 /* Wrapper */
-#define COLORED(C, T) WHITE REGULAR "[" C BOLD T WHITE REGULAR "]" RESET " "
+#define cx_PREFIXER_(CP, P, CM, M)                                             \
+    cx_RESET                                                                   \
+    cx_WHITE "[" CP cx_BOLD P cx_RESET cx_WHITE "] "                           \
+    cx_RESET CM cx_BOLD M                                                      \
+    cx_RESET
 
-/* Values */
-#define OKAY COLORED(GREEN , " OKAY ")
-#define FAIL COLORED(YELLOW, " FAIL ")
-#define DEAD COLORED(RED   , " STOP ")
+/* Wrapper-redirector */
+#define cx_PREFIXER(...) cx_PREFIXER_(__VA_ARGS__)
+
+/* Predefinitions */
+#define cx_OKAY_(M) cx_PREFIXER(cx_GREEN  , " OKAY ", cx_WHITE, M)
+#define cx_FAIL_(M) cx_PREFIXER(cx_RED    , " FAIL ", cx_WHITE, M)
+#define cx_DEAD_(M) cx_PREFIXER(cx_MAGENTA, " STOP ", cx_WHITE, M)
+
+/* Predefinition-redirectors */
+#define cx_OKAY(...) cx_OKAY_(__VA_ARGS__)
+#define cx_FAIL(...) cx_FAIL_(__VA_ARGS__)
+#define cx_DEAD(...) cx_DEAD_(__VA_ARGS__)
 
 #endif /* __CHEMICAL_X_TESTS_PREFIXES_H_3054625138382304__ */
